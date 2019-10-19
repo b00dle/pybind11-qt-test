@@ -20,7 +20,8 @@ SOURCES += \
     main_window.cpp
 
 HEADERS += \
-    main_window.h
+    main_window.h \
+    py-wrappers/my_struct.h
 
 INCLUDEPATH += /usr/include/python3.5 /usr/local/include/pybind11
 LIBS += -L"/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu" -lpython3.5
