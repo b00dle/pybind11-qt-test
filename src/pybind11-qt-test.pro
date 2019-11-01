@@ -17,11 +17,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
-    main_window.cpp
+    main_window.cpp \
+    py-wrappers/py_http_types.cpp
 
 HEADERS += \
     main_window.h \
-    py-wrappers/my_struct.h
+    py-wrappers/py_http_types.h
 
 INCLUDEPATH += /usr/include/python3.5 /usr/local/include/pybind11
 LIBS += -L"/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu" -lpython3.5

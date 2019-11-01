@@ -1,5 +1,5 @@
 __pycache__
-
+secret.json
 # C++ objects and libs
 *.slo
 *.lo

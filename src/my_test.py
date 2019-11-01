@@ -1,6 +1,6 @@
-from example import DictNamedClass, KwargsNamedClass
+import example as e
 
-class Molly(KwargsNamedClass):
+class Molly(e.KwargsNamedClass):
     def __init__(self):
         super().__init__(name="Molly", **{})
 
@@ -15,9 +15,9 @@ def get_dict():
 
 def get_my_struct():
     data = {"name": "fooooo", "prop": 2}
-    d = DictNamedClass(data=data)
+    d = e.DictNamedClass(data=data)
     print(d)
-    p = KwargsNamedClass(**data)
+    p = e.KwargsNamedClass(**data)
     p.name = "POPEL"
     print(p)
     res = Molly()

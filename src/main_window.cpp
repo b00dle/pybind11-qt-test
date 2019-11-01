@@ -3,18 +3,16 @@
 #include <QDebug>
 #include <QTimer>
 #include <QTextStream>
+#include <QVBoxLayout>
 
-#include "py-wrappers/my_struct.h"
+#include "py-wrappers/py_http_types.h"
 
 #define TRIGGER_INTERVAL 1000
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , run_time_()
-    , frame_trigger_(new QTimer(this))
-    , monitoring_trigger_(new QTimer(this))
     , text_edit_(new QTextEdit(this))
-    , frame_count_(0)
+    , button_(new QPushButton(tr("execute"), this))
 {
     initWidgets();
     initLayout();
@@ -25,67 +23,65 @@ MainWindow::~MainWindow()
 
 }
 
+void MainWindow::callPythonCode()
+{
+    QString* content = new QString();
+    QTextStream text_stream;
+    text_stream.setString(content);
+    {
+        py::scoped_interpreter guard{};
+
+        // add script path to sys.path
+        py::module sys = py::module::import("sys");
+        auto locals = py::dict("my_scripts"_a="/home/basti/Documents/git/pybind11-qt-test/src");
+        py::exec(R"(
+            import sys
+            sys.path.insert(0, '{my_scripts}'.format(**locals()))
+        )", py::globals(), locals);
+
+        // import module for client requests
+        py::module companion_client = py::module::import("companion_client");
+
+        // call get_sounds request
+        py::object response_result = companion_client.attr("get_sounds")();
+
+        // extract response object
+        PyHttpResponse response = response_result.cast<PyHttpResponse>();
+        text_stream << "=== HTTP RESPONSE ===\n"
+                    << "status: " << response.status_code << "\n"
+                    << "content: " <<response.message.c_str() << "\n";
+
+        // parse response object content
+        if(!response.dataIsNone()) {
+            for(auto sound_obj: response.data.cast<py::list>()) {
+                PySound sound = sound_obj.cast<PySound>();
+                text_stream << "<Sound"
+                            << " local_path=" << sound.local_path.c_str()
+                            << " name=" << sound.resource.name.c_str()
+                            << " uuid=" << sound.uuid.c_str() << ">\n";
+            }
+        }
+    }
+    text_edit_->append("\n" + text_stream.readAll());
+    delete content;
+}
+
 void MainWindow::initWidgets()
 {
-    connect(frame_trigger_, &QTimer::timeout, this, [=]{
-        QString* content = new QString();
-        QTextStream text_stream;
-        text_stream.setString(content);
-        frame_count_ += 1;
-        {
-            py::scoped_interpreter guard{};
-            py::module sys = py::module::import("sys");
-            auto locals = py::dict("my_scripts"_a="/home/basti/Documents/git/pybind11-qt-test/src");
-            py::exec(R"(
-                import sys
-                sys.path.insert(0, '{my_scripts}'.format(**locals()))
-            )", py::globals(), locals);
-
-            py::module my_test = py::module::import("my_test");
-
-            py::object add_result = my_test.attr("add")(1, 2);
-            int n = add_result.cast<int>();
-            text_stream << "add result" << n;
-
-            py::object list_result = my_test.attr("get_list")();
-            py::list list = list_result.cast<py::list>();
-            text_stream << "add result" << list[0].cast<int>();
-
-            py::object dict_result = my_test.attr("get_dict")();
-            py::dict dict = dict_result.cast<py::dict>();
-            text_stream << "dict result" << dict["0"].cast<int>();
-
-            py::object struct_result = my_test.attr("get_my_struct")();
-            KwargsNamedClass s = struct_result.cast<KwargsNamedClass>();
-            text_stream << "struct " << s.name.c_str();
-        }
-        text_edit_->append("\n" + text_stream.readAll());
-        delete content;
-    });
-    frame_trigger_->setInterval(TRIGGER_INTERVAL);
-    frame_trigger_->start();
-
-
-    connect(monitoring_trigger_, &QTimer::timeout, this, [=]{
-        QString* content = new QString();
-        QTextStream text_stream;
-        text_stream.setString(content);
-
-        qDebug() << "============= FPS " << frame_count_ << " =============";
-        frame_count_ = 0;
-
-        //text_edit_->append("\n" + text_stream.readAll());
-        delete content;
-    });
-    monitoring_trigger_->setInterval(1000);
-    monitoring_trigger_->start();
-
-    run_time_.start();
+    connect(button_, &QPushButton::clicked,
+            this, &MainWindow::callPythonCode);
 }
 
 void MainWindow::initLayout()
 {
     text_edit_->setReadOnly(true);
-    setCentralWidget(text_edit_);
+
+    QVBoxLayout* layout = new QVBoxLayout;
+    layout->addWidget(text_edit_);
+    layout->addWidget(button_);
+    QWidget* container = new QWidget(this);
+    container->setLayout(layout);
+
+    setCentralWidget(container);
 }
 
