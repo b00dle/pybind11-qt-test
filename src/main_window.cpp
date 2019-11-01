@@ -32,20 +32,17 @@ void MainWindow::initWidgets()
         QTextStream text_stream;
         text_stream.setString(content);
         frame_count_ += 1;
-        py::initialize_interpreter();
+        //py::initialize_interpreter();
         {
+            py::scoped_interpreter guard{};
             py::module sys = py::module::import("sys");
-
             auto locals = py::dict("my_scripts"_a="/home/basti/Documents/git/pybind11-qt-test/src");
             py::exec(R"(
                 import sys
                 sys.path.insert(0, '{my_scripts}'.format(**locals()))
             )", py::globals(), locals);
 
-            //py::print(sys.attr("path"));
-
             py::module my_test = py::module::import("my_test");
-            MyStruct::importInto(my_test);
 
             py::object add_result = my_test.attr("add")(1, 2);
             int n = add_result.cast<int>();
@@ -63,7 +60,7 @@ void MainWindow::initWidgets()
             MyStruct s = struct_result.cast<MyStruct>();
             text_stream << "struct " << s.getName().c_str();
         }
-        py::finalize_interpreter();
+        //py::finalize_interpreter();
         text_edit_->append("\n" + text_stream.readAll());
         delete content;
     });

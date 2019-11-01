@@ -15,18 +15,20 @@ struct MyStruct {
     const std::string &getName() const { return name; }
 
     std::string name;
-
-    static void importInto(py::module& m) {
-        py::class_<MyStruct>(m, "MyStruct")
-                .def(py::init<const std::string &>())
-                .def("setName", &MyStruct::setName)
-                .def("getName", &MyStruct::getName)
-                .def("__repr__",
-                    [](const MyStruct &a) {
-                        return "<Pet named '" + a.name + "'>";
-                    }
-                );
-    }
 };
+
+PYBIND11_EMBEDDED_MODULE(example, m) {
+    m.doc() = "pybind11 example plugin"; // optional module docstring
+
+    py::class_<MyStruct>(m, "MyStruct")
+            .def(py::init<const std::string &>(), py::arg("name")="No Name")
+            .def("setName", &MyStruct::setName)
+            .def("getName", &MyStruct::getName)
+            .def("__repr__",
+                [](const MyStruct &a) {
+                    return "<Pet named '" + a.name + "'>";
+                }
+            );
+}
 
 #endif // MYSTRUCT_H
