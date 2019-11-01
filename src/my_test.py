@@ -1,8 +1,8 @@
-from example import MyStruct
+from example import DictNamedClass, KwargsNamedClass
 
-class Molly(MyStruct):
+class Molly(KwargsNamedClass):
     def __init__(self):
-        super().__init__(name="Molly")
+        super().__init__(name="Molly", **{})
 
 def add(a, b):
     return a + b
@@ -14,8 +14,12 @@ def get_dict():
     return {str(i): i for i in range(0,10)}
 
 def get_my_struct():
-    empty_struct = MyStruct()
-    print(empty_struct.getName())
+    data = {"name": "fooooo", "prop": 2}
+    d = DictNamedClass(data=data)
+    print(d)
+    p = KwargsNamedClass(**data)
+    p.name = "POPEL"
+    print(p)
     res = Molly()
-    print(res.getName())
+    print(res)
     return res

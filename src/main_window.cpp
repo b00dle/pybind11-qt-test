@@ -32,7 +32,6 @@ void MainWindow::initWidgets()
         QTextStream text_stream;
         text_stream.setString(content);
         frame_count_ += 1;
-        //py::initialize_interpreter();
         {
             py::scoped_interpreter guard{};
             py::module sys = py::module::import("sys");
@@ -57,10 +56,9 @@ void MainWindow::initWidgets()
             text_stream << "dict result" << dict["0"].cast<int>();
 
             py::object struct_result = my_test.attr("get_my_struct")();
-            MyStruct s = struct_result.cast<MyStruct>();
-            text_stream << "struct " << s.getName().c_str();
+            KwargsNamedClass s = struct_result.cast<KwargsNamedClass>();
+            text_stream << "struct " << s.name.c_str();
         }
-        //py::finalize_interpreter();
         text_edit_->append("\n" + text_stream.readAll());
         delete content;
     });
