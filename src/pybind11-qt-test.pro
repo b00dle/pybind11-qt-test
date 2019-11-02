@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,11 +16,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    http_types.cpp \
     main.cpp \
     main_window.cpp \
     py-wrappers/py_http_types.cpp
 
 HEADERS += \
+    http_types.h \
     main_window.h \
     py-wrappers/py_http_types.h
 

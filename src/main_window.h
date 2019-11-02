@@ -5,6 +5,7 @@
 #include <QTextEdit>
 #include <QElapsedTimer>
 #include <QPushButton>
+#include <QNetworkAccessManager>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/embed.h>
@@ -21,13 +22,23 @@ public:
     ~MainWindow();
 
 public:
-    void callPythonCode();
+    void callPythonHttpRequest();
+    void callQtHttpRequest();
+
+public Q_SLOTS:
+    void handleQtHttpReply(QNetworkReply* reply);
 
 private:
     void initWidgets();
     void initLayout();
+    void loadApiToken();
 
     QTextEdit* text_edit_;
-    QPushButton* button_;
+    QPushButton* button_py_exec_;
+    QPushButton* button_qt_exec_;
+
+    // For Qt based Http access
+    QNetworkAccessManager* network_access_;
+    QString api_token_;
 };
 #endif // MAINWINDOW_H
