@@ -29,12 +29,3 @@ HEADERS += \
     model/sound_model.h \
     repository/sound_repository.h \
     view/sound_table_view.h
-
-#INCLUDEPATH += /usr/include/python3.5 /usr/local/include/pybind11
-#LIBS += -L"/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu" -lpython3.5
-
-#-L"/usr/lib/python3.5"
-# Default rules for deployment.
-#qnx: target.path = /tmp/$${TARGET}/bin
-#else: unix:!android: target.path = /opt/$${TARGET}/bin
-#!isEmpty(target.path): INSTALLS += target
