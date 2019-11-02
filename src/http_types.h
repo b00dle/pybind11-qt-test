@@ -1,5 +1,5 @@
-#ifndef SOUND_H
-#define SOUND_H
+#ifndef HTTP_TYPES_H
+#define HTTP_TYPES_H
 
 #include <QString>
 #include <QJsonObject>
@@ -24,4 +24,5 @@ struct Sound {
     QString local_path;
     QString uuid;
 };
-#endif // SOUND_H
+
+#endif // HTTP_TYPES_H

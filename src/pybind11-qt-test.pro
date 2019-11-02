@@ -2,7 +2,7 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11 no_keywords
+CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -19,18 +19,22 @@ SOURCES += \
     http_types.cpp \
     main.cpp \
     main_window.cpp \
-    py-wrappers/py_http_types.cpp
+    model/sound_model.cpp \
+    repository/sound_repository.cpp \
+    view/sound_table_view.cpp
 
 HEADERS += \
     http_types.h \
     main_window.h \
-    py-wrappers/py_http_types.h
+    model/sound_model.h \
+    repository/sound_repository.h \
+    view/sound_table_view.h
 
-INCLUDEPATH += /usr/include/python3.5 /usr/local/include/pybind11
-LIBS += -L"/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu" -lpython3.5
+#INCLUDEPATH += /usr/include/python3.5 /usr/local/include/pybind11
+#LIBS += -L"/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu" -lpython3.5
 
 #-L"/usr/lib/python3.5"
 # Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+#qnx: target.path = /tmp/$${TARGET}/bin
+#else: unix:!android: target.path = /opt/$${TARGET}/bin
+#!isEmpty(target.path): INSTALLS += target

@@ -2,16 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTextEdit>
-#include <QElapsedTimer>
 #include <QPushButton>
-#include <QNetworkAccessManager>
 
-#include <pybind11/pybind11.h>
-#include <pybind11/embed.h>
-
-namespace py = pybind11;
-using namespace py::literals;
+#include "view/sound_table_view.h"
 
 class MainWindow : public QMainWindow
 {
@@ -21,24 +14,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-public:
-    void callPythonHttpRequest();
-    void callQtHttpRequest();
-
-public Q_SLOTS:
-    void handleQtHttpReply(QNetworkReply* reply);
-
 private:
     void initWidgets();
     void initLayout();
-    void loadApiToken();
 
-    QTextEdit* text_edit_;
-    QPushButton* button_py_exec_;
-    QPushButton* button_qt_exec_;
-
-    // For Qt based Http access
-    QNetworkAccessManager* network_access_;
-    QString api_token_;
+    QPushButton* button_refresh_;
+    SoundTableView* sound_view_;
 };
 #endif // MAINWINDOW_H
