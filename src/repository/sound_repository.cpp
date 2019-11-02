@@ -46,7 +46,7 @@ void SoundRepository::handleReply(QNetworkReply *reply)
     }
 
     if(sounds.size() > 0)
-        Q_EMIT soundsReceived(sounds);
+        emit soundsReceived(sounds);
 }
 
 void SoundRepository::initNetworkAccess()
